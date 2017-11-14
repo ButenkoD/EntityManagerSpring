@@ -2,14 +2,13 @@ package com.andersenlab.entity_manager_spring.entity;
 
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ProductRepository extends AbstractRepository {
     public String create(List<String> params) throws Exception {
         Product product = new Product(params);
-        List result = create(product);
+        List<Product> result = create(product, Product.class);
         return objectsToString(result);
     }
 
@@ -26,20 +25,10 @@ public class ProductRepository extends AbstractRepository {
     }
 
     public String show() throws Exception {
-        List<Product> products = new ArrayList<>();
-        List objects = selectAll(Product.class.getSimpleName());
-        for(Object o : objects) {
-            products.add((Product) o);
-        }
-        return objectsToString(products);
+        return objectsToString(selectAll(Product.class));
     }
 
     public List<Product> findAllByIds(List<Integer> ids) throws Exception {
-        List<Product> products = new ArrayList<>();
-        List objects = findAllByIds(Product.class, ids);
-        for(Object o : objects) {
-            products.add((Product) o);
-        }
-        return products;
+        return findAllByIds(Product.class, ids);
     }
 }

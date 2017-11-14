@@ -3,7 +3,6 @@ package com.andersenlab.entity_manager_spring.entity;
 import javassist.NotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -11,7 +10,7 @@ public class CustomerRepository extends AbstractRepository {
     private static final String CANT_FOUND_MESSAGE = "Can't found customer with id ";
     public String create(List<String> params) throws Exception {
         Customer customer = new Customer(params);
-        List result = create(customer);
+        List<Customer> result = create(customer, Customer.class);
         return objectsToString(result);
     }
 
@@ -36,11 +35,6 @@ public class CustomerRepository extends AbstractRepository {
     }
 
     public String show() throws Exception {
-        List<Customer> customers = new ArrayList<>();
-        List objects = selectAll(Customer.class.getSimpleName());
-        for(Object o : objects) {
-            customers.add((Customer) o);
-        }
-        return objectsToString(customers);
+        return objectsToString(selectAll(Customer.class));
     }
 }

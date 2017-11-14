@@ -25,7 +25,7 @@ public class PurchaseRepository extends AbstractRepository {
             List<Product> products = ConsoleApplication.getContext().getBean(ProductRepository.class)
                     .findAllByIds(productIds);
             purchase.setProducts(products);
-            return objectsToString(create(purchase));
+            return objectsToString(create(purchase, Purchase.class));
         }
         throw new Exception(CANT_CREATE_MESSAGE);
     }
@@ -43,11 +43,6 @@ public class PurchaseRepository extends AbstractRepository {
     }
 
     public String show() throws Exception {
-        List<Purchase> purchases = new ArrayList<>();
-        List objects = selectAll(Product.class.getSimpleName());
-        for(Object o : objects) {
-            purchases.add((Purchase) o);
-        }
-        return objectsToString(purchases);
+        return objectsToString(selectAll(Purchase.class));
     }
 }

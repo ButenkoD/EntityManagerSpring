@@ -34,7 +34,7 @@ public abstract class AbstractRepository {
         return !Modifier.isStatic(mod) && Modifier.isPublic(mod);
     }
 
-    String objectsToString(List<?> objects) {
+    <T> String objectsToString(List<T> objects) {
         if (objects.isEmpty()) {
             return "Empty table";
         }
@@ -44,31 +44,31 @@ public abstract class AbstractRepository {
     }
 
 
-    List selectAll(String classname) {
-        return entityManager.createQuery("select c from "+classname+" c", Object.class).getResultList();
+    <T> List<T> selectAll(Class<T> clazz) {
+        return entityManager.createQuery("select c from "+clazz.getSimpleName()+" c", clazz).getResultList();
     }
 
 
-    public List create(Object object) {
+    public <T> List<T> create(T object, Class<T> clazz) {
         entityManager.persist(object);
-        return selectAll(object.getClass().getSimpleName());
+        return selectAll(clazz);
     }
 
-    void remove(Class<?> classObject, int id) {
-        Object object = entityManager.find(classObject, id);
+    <T> void remove(Class<T> clazz, int id) {
+        Object object = entityManager.find(clazz, id);
         entityManager.remove(object);
     }
 
 
-    Object find(Class<?> classObject, int id) throws Exception  {
-        return entityManager.find(classObject, id);
+    <T> T find(Class<T> clazz, int id) throws Exception  {
+        return entityManager.find(clazz, id);
     }
 
-    List<?> findAllByIds(Class<?> classObject, List<Integer> ids) throws Exception{
+    <T> List<T> findAllByIds(Class<T> clazz, List<Integer> ids) throws Exception{
         return entityManager.createQuery(
                 "SELECT p FROM "
-                        + classObject.getSimpleName()
-                        +" p WHERE p.id IN :ids", classObject)
+                        + clazz.getSimpleName()
+                        +" p WHERE p.id IN :ids", clazz)
                 .setParameter("ids", ids).getResultList();
     }
 }
